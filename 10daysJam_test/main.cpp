@@ -23,8 +23,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Novice::Initialize(kWindowTitle, 1280, 768);
 
 	// キー入力結果を受け取る箱
-	char keys[256] = {0};
-	char preKeys[256] = {0};
+	char keys[256] = { 0 };
+	char preKeys[256] = { 0 };
 
 	int Size = 64;	// ブロックサイズ
 
@@ -67,7 +67,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	  {2,0,0,0,0,2,0,0,0,2,0,0,3,0,2},  // 5
 	  {2,0,0,0,0,2,2,2,2,2,0,0,3,0,2},  // 6
 	  {2,0,0,0,0,0,0,3,0,0,0,0,3,0,2},  // 7
-	  {2,4,4,4,4,4,4,5,4,4,4,4,0,0,2},  // 8
+	  {2,4,4,4,4,4,4,7,4,4,4,4,0,0,2},  // 8
 	  {2,0,0,0,0,0,0,3,0,0,0,0,3,0,2},  // 9
 	  {2,0,0,0,0,0,0,1,0,0,0,0,3,0,2},  // 10
 	  {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},  // 11
@@ -93,14 +93,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		BACK,	      // 0 背景、マス目
 		PLAYER,	      // 1 プレイヤー
 		WALL,	      // 2 壁
-		VERTICAL,     // 3 縦真っ直ぐ
-		SIDE,         // 4 横真っ直ぐ
-		UNDERRIGHT,   // 5 下と右
-		UNDERLEFT,    // 6 下と左
-		TOPRIGHT,     // 7 上と右
-		TOPLEFT,	  // 8 上と左
-		ENEMY,        // 9 エネミー
-		CLEAR
+		VERTICAL,     // 3 縦真っ直ぐ  方向転換無し 見た目用
+		SIDE,         // 4 横真っ直ぐ  方向転換無し 見た目用
+		UP,           // 5 上
+		DOWN,         // 6 下
+		RIGHT,        // 7 右
+		LEFT,	      // 8 左
+		ENEMY         // 9 エネミー
 	};
 
 	mapCountX = sizeof(map0[0]) / sizeof(map0[0][0]);
@@ -115,12 +114,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	int vertical = Novice::LoadTexture("./Resource/images/vertical.png");
 	int side = Novice::LoadTexture("./Resource/images/side.png");
 
-	int underRight = Novice::LoadTexture("./Resource/images/underRight.png");
-	int underLeft = Novice::LoadTexture("./Resource/images/underLeft.png");
-	int topRight = Novice::LoadTexture("./Resource/images/topRight.png");
-	int topLeft = Novice::LoadTexture("./Resource/images/topLeft.png");
+	int up = Novice::LoadTexture("./Resource/images/up.png");
+	int down = Novice::LoadTexture("./Resource/images/down.png");
+	int right = Novice::LoadTexture("./Resource/images/right.png");
+	int left = Novice::LoadTexture("./Resource/images/left.png");
 
-	
+
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -150,9 +149,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					// 背景
 					if (map0[y][x] == BACK)
 					{
-						Novice::DrawSprite(x* Size, y* Size, math, 2, 2, 0, color);
+						Novice::DrawSprite(x * Size, y * Size, math, 2, 2, 0, color);
 					}
-					
+
 					// 壁
 					if (map0[y][x] == WALL) {
 						Novice::DrawSprite(x * Size, y * Size, wall, 2, 2, 0, WHITE);
@@ -167,21 +166,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						Novice::DrawSprite(x * Size, y * Size, side, 2, 2, 0, WHITE);
 					}
 
-					// 上と右
-					if (map0[y][x] == UNDERRIGHT) {
-						Novice::DrawSprite(x * Size, y * Size,underRight, 2, 2, 0, WHITE);
+					// 上
+					if (map0[y][x] == UP) {
+						Novice::DrawSprite(x * Size, y * Size, up, 2, 2, 0, WHITE);
 					}
-					// 上と左
-					if (map0[y][x] == UNDERLEFT) {
-						Novice::DrawSprite(x * Size, y * Size, underLeft, 2, 2, 0, WHITE);
+					// 下
+					if (map0[y][x] == DOWN) {
+						Novice::DrawSprite(x * Size, y * Size, down, 2, 2, 0, WHITE);
 					}
-					// 下と右
-					if (map0[y][x] == TOPRIGHT) {
-						Novice::DrawSprite(x * Size, y * Size, topRight, 2, 2, 0, WHITE);
+					// 右
+					if (map0[y][x] == RIGHT) {
+						Novice::DrawSprite(x * Size, y * Size, right, 2, 2, 0, WHITE);
 					}
-					// 下と左
-					if (map0[y][x] == TOPLEFT) {
-						Novice::DrawSprite(x * Size, y * Size, topLeft, 2, 2, 0, WHITE);
+					// 左
+					if (map0[y][x] == LEFT) {
+						Novice::DrawSprite(x * Size, y * Size, left, 2, 2, 0, WHITE);
 					}
 
 					// プレイヤー
