@@ -65,6 +65,8 @@ void GameManager::Update()
 		selectWX_ = 1000;
 		selectWY_ = 260;
 	}
+
+	
 }
 
 void GameManager::Draw()

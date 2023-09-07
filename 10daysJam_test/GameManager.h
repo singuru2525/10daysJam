@@ -53,6 +53,20 @@ private:
 	  {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},  // 11
 	};
 
+	int map1[12][15] = {                // チュートリアル
+	  {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},  // 0
+	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 1
+	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 2
+	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 3
+	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 4
+	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 5
+	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 6
+	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 7
+	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 8
+	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 9
+	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 10
+	  {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},  // 11
+	};
 
 	enum MapInfo {
 		BACK,	      // 0 背景、マス目
@@ -94,12 +108,12 @@ private:
 	// フラグ
 	bool isWall = 0;
 
-	int back = Novice::LoadTexture("./Resource/images/math.png");                      //背景
-	int wall = Novice::LoadTexture("./Resource/images/metaru.png");                      //壁
+	int back = Novice::LoadTexture("./Resource/images/math.png");           //背景
+	int wall = Novice::LoadTexture("./Resource/images/metaru.png");         //壁
 	int player = Novice::LoadTexture("./Resource/images/player.png");
 	int enemy = Novice::LoadTexture("./Resource/images/enemy.png");
 
-	int math = Novice::LoadTexture("./Resource/images/math.png");      // マス目
+	int math = Novice::LoadTexture("./Resource/images/math.png");           // マス目
 
 	int vertical = Novice::LoadTexture("./Resource/images/vertical.png");
 	int side = Novice::LoadTexture("./Resource/images/side.png");
