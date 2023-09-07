@@ -86,8 +86,8 @@ private:
 	int mousePosY_ = 0;
 
 	// 選択ボックス(仮)
-	int selectWX_ = 1000;
-	int selectWY_ = 260;
+	int selectWX_ = 1085;
+	int selectWY_ = 165;
 	int selectWR_ = 64;
 	int selectWColor_ = WHITE;
 
@@ -108,18 +108,20 @@ private:
 	// フラグ
 	bool isWall = 0;
 
-	int back = Novice::LoadTexture("./Resource/images/math.png");           //背景
+	int back = Novice::LoadTexture("./Resource/images/yuka.png");           //背景
 	int wall = Novice::LoadTexture("./Resource/images/metaru.png");         //壁
 	int player = Novice::LoadTexture("./Resource/images/player.png");
 	int enemy = Novice::LoadTexture("./Resource/images/enemy.png");
 
 	int math = Novice::LoadTexture("./Resource/images/math.png");           // マス目
 
-	int vertical = Novice::LoadTexture("./Resource/images/vertical.png");
+	int vertical = Novice::LoadTexture("./Resource/images/gomu.png");
 	int side = Novice::LoadTexture("./Resource/images/side.png");
 
 	int up = Novice::LoadTexture("./Resource/images/up.png");
 	int down = Novice::LoadTexture("./Resource/images/down.png");
 	int right = Novice::LoadTexture("./Resource/images/right.png");
 	int left = Novice::LoadTexture("./Resource/images/left.png");
+
+	int panel = Novice::LoadTexture("./Resource/images/panel.png");
 };

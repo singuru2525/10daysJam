@@ -62,8 +62,8 @@ void GameManager::Update()
 
 		map0[leftTY][leftTX] = WALL;
 		isWall = false;
-		selectWX_ = 1000;
-		selectWY_ = 260;
+		selectWX_ = 1085;
+		selectWY_ = 165;
 	}
 
 	
@@ -78,20 +78,21 @@ void GameManager::Draw()
 
 				// 背景
 				if (map0[y][x] == BACK) {
-					Novice::DrawSprite(x * Size, y * Size, back, 2, 2, 0, backColor_[y][x]);
+					Novice::DrawSprite(x * Size, y * Size, back, 1, 1, 0, backColor_[y][x]);
+					Novice::DrawSprite(x * Size, y * Size, math, 1, 1, 0, backColor_[y][x]);
 				}
 
 				// 壁
 				if (map0[y][x] == WALL) {
-					Novice::DrawSprite(x * Size, y * Size, wall, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, wall, 1, 1, 0, WHITE);
 				}
 				// 縦真っ直ぐ
 				if (map0[y][x] == VERTICAL) {
-					Novice::DrawSprite(x * Size, y * Size, vertical, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, vertical, 1, 1, 0, WHITE);
 				}
 				// 横真っ直ぐ
 				if (map0[y][x] == SIDE) {
-					Novice::DrawSprite(x * Size, y * Size, side, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, side, 1, 1, 0, WHITE);
 				}
 
 				// 上
@@ -123,8 +124,10 @@ void GameManager::Draw()
 		}
 	}
 
+	Novice::DrawSprite(960, 0, panel, 1, 1, 0, WHITE);
+
 	Novice::DrawBox(selectWX_, selectWY_, selectWR_, selectWR_, 0.f, selectWColor_, kFillModeSolid);
-	Novice::DrawSprite(selectWX_, selectWY_, wall, 2, 2, 0, selectWColor_);
+	Novice::DrawSprite(selectWX_, selectWY_, wall, 1, 1, 0, selectWColor_);
 	Novice::ScreenPrintf(1000, 0, "map[%d][%d]", leftTY, leftTX);
 	Novice::ScreenPrintf(1000, 20, "saveMap[%d][%d]", saveLeftTY, saveLeftTX);
 }
