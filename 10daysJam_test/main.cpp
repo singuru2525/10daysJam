@@ -1,12 +1,7 @@
 #include <Novice.h>
-#include "GameManager.h"
+#include "SceneManager.h"
 
-const char kWindowTitle[] = "GC2A_17_タナカショウ";
-
-struct Vector2 {
-	float x;
-	float y;
-};
+const char kWindowTitle[] = "GC2A_16_タナカケイスケ";
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -18,41 +13,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	char keys[256] = { 0 };
 	char preKeys[256] = { 0 };
 
-	//int move = 0;	// プレイヤーの向き 0右 1左
-
-	int map0[12][15] = {                // チュートリアル
-	  {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},  // 0
-	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 1
-	  {2,0,0,0,0,0,0,0,4,4,4,4,0,0,2},  // 2
-	  {2,0,0,0,0,0,0,3,0,0,0,0,3,0,2},  // 3
-	  {2,0,0,0,0,2,0,9,0,2,0,0,3,0,2},  // 4
-	  {2,0,0,0,0,2,0,0,0,2,0,0,3,0,2},  // 5
-	  {2,0,0,0,0,2,2,2,2,2,0,0,3,0,2},  // 6
-	  {2,0,0,0,0,0,0,3,0,0,0,0,3,0,2},  // 7
-	  {2,4,4,4,4,4,4,7,4,4,4,4,0,0,2},  // 8
-	  {2,0,0,0,0,0,0,3,0,0,0,0,3,0,2},  // 9
-	  {2,0,0,0,0,0,0,1,0,0,0,0,3,0,2},  // 10
-	  {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},  // 11
-	};
-
-	int map1[12][15] = {                // ステージ１
-	  {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},  // 0
-	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 1
-	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 2
-	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 3
-	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 4
-	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 5
-	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 6
-	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 7
-	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 8
-	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 9
-	  {2,0,1,0,0,0,0,0,0,0,0,0,0,0,2},  // 10
-	  {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},  // 11
-	};
-
-
-	GameManager* gameManager = new GameManager;
-	gameManager->Initialize();
+	SceneManager* sceneManager = new SceneManager;
+	sceneManager->Initialize();
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -67,7 +29,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓更新処理ここから
 		///
 
-		gameManager->Update();
+		//gameManager->Update();
+
+		sceneManager->Update(keys, preKeys);
 
 		///
 		/// ↑更新処理ここまで
@@ -77,7 +41,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ↓描画処理ここから
 		///
 
-		gameManager->Draw();
+		//gameManager->Draw();
+
+		sceneManager->Draw();
 
 		///
 		/// ↑描画処理ここまで
