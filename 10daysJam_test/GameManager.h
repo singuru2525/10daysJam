@@ -172,6 +172,10 @@ private:
 	int collisionFlag_;//判定をとるフラグ
 	int setShotFlag_;//打つまでのフラグ
 
+	// プレイヤーの向き
+	int savePlayerPosX_;
+	int savePlayerPosY_;
+
 	// フラグ
 	bool isWall[4];
 	int clickFlag_;
@@ -191,6 +195,12 @@ private:
 	int down = Novice::LoadTexture("./Resource/images/down.png");
 	int right = Novice::LoadTexture("./Resource/images/right.png");
 	int left = Novice::LoadTexture("./Resource/images/left.png");
+
+	int upAllow = Novice::LoadTexture("./Resource/images/AllowUp.png");
+	int downAllow = Novice::LoadTexture("./Resource/images/Allowdown.png");
+	int rightAllow = Novice::LoadTexture("./Resource/images/AllowRight.png");
+	int leftAllow = Novice::LoadTexture("./Resource/images/AllowLeft.png");
+
 
 	int panel = Novice::LoadTexture("./Resource/images/panel.png");
 };

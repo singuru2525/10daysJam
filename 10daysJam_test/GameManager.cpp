@@ -118,6 +118,8 @@ void GameManager::Update(int stageNo, char keys[256])
 
 						shotPosX_ = x * Size;
 						shotPosY_ = y * Size;
+						savePlayerPosX_ = shotPosX_;
+						savePlayerPosY_ = shotPosY_;
 					}
 				}
 				//壁の判定
@@ -504,6 +506,8 @@ void GameManager::Update(int stageNo, char keys[256])
 
 						shotPosX_ = x * Size;
 						shotPosY_ = y * Size;
+						savePlayerPosX_ = shotPosX_;
+						savePlayerPosY_ = shotPosY_;
 					}
 				}
 				//壁の判定
@@ -765,7 +769,7 @@ void GameManager::Update(int stageNo, char keys[256])
 		}
 		else
 		{
-			selectWColor_[1] = 0xFF00FFFF;
+			selectWColor_[1] = WHITE;
 		}
 		if (clickFlag_ == 0) {
 			if (selectWColor_[1] == RED && Novice::IsPressMouse(0))
@@ -780,7 +784,7 @@ void GameManager::Update(int stageNo, char keys[256])
 			selectWY_[1] = mousePosY_;
 		}
 		// マップとブロックの配置判定
-		if (map0[leftTY[1]][leftTX[1]] == BACK && isWall[1] && selectWX_[1] <= 960)
+		if (map1[leftTY[1]][leftTX[1]] == BACK && isWall[1] && selectWX_[1] <= 960)
 		{
 			backColor_[saveLeftTY[1]][saveLeftTX[1]] = WHITE;
 			backColor_[leftTY[1]][leftTX[1]] = RED;
@@ -790,7 +794,7 @@ void GameManager::Update(int stageNo, char keys[256])
 
 		if (Novice::IsPressMouse(1) && backColor_[leftTY[1]][leftTX[1]] == RED)
 		{
-			map0[leftTY[1]][leftTX[1]] = RIGHT;
+			map1[leftTY[1]][leftTX[1]] = RIGHT;
 			isWall[1] = false;
 			clickFlag_ = 0;
 			selectWX_[1] = 1085;
@@ -806,7 +810,7 @@ void GameManager::Update(int stageNo, char keys[256])
 		}
 		else
 		{
-			selectWColor_[2] = 0xCC00FFFF;
+			selectWColor_[2] = WHITE;
 		}
 		if (clickFlag_ == 0) {
 			if (selectWColor_[2] == RED && Novice::IsPressMouse(0))
@@ -846,7 +850,7 @@ void GameManager::Update(int stageNo, char keys[256])
 		}
 		else
 		{
-			selectWColor_[3] = BLUE;
+			selectWColor_[3] = WHITE;
 		}
 		if (clickFlag_ == 0) {
 			if (selectWColor_[3] == RED && Novice::IsPressMouse(0))
@@ -890,6 +894,8 @@ void GameManager::Update(int stageNo, char keys[256])
 
 						shotPosX_ = x * Size;
 						shotPosY_ = y * Size;
+						savePlayerPosX_ = shotPosX_;
+						savePlayerPosY_ = shotPosY_;
 					}
 				}
 				//壁の判定
@@ -1151,7 +1157,7 @@ void GameManager::Update(int stageNo, char keys[256])
 		}
 		else
 		{
-			selectWColor_[1] = 0xFF00FFFF;
+			selectWColor_[1] = WHITE;
 		}
 		if (clickFlag_ == 0) {
 			if (selectWColor_[1] == RED && Novice::IsPressMouse(0))
@@ -1174,6 +1180,8 @@ void GameManager::Update(int stageNo, char keys[256])
 			saveLeftTY[1] = leftTY[1];
 		}
 
+
+
 		if (Novice::IsPressMouse(1) && backColor_[leftTY[1]][leftTX[1]] == RED)
 		{
 			map2[leftTY[1]][leftTX[1]] = RIGHT;
@@ -1192,7 +1200,7 @@ void GameManager::Update(int stageNo, char keys[256])
 		}
 		else
 		{
-			selectWColor_[2] = 0xCC00FFFF;
+			selectWColor_[2] = WHITE;
 		}
 		if (clickFlag_ == 0) {
 			if (selectWColor_[2] == RED && Novice::IsPressMouse(0))
@@ -1232,7 +1240,7 @@ void GameManager::Update(int stageNo, char keys[256])
 		}
 		else
 		{
-			selectWColor_[3] = BLUE;
+			selectWColor_[3] = WHITE;
 		}
 		if (clickFlag_ == 0) {
 			if (selectWColor_[3] == RED && Novice::IsPressMouse(0))
@@ -1343,6 +1351,24 @@ void GameManager::Update(int stageNo, char keys[256])
 		selectWX_[3] = 1085;
 		selectWY_[3] = 650;
 	}
+
+	// リセット
+	if (keys[DIK_R])
+	{
+		for (int y = 0; y < mapCountY; y++) {
+			for (int x = 0; x < mapCountX; x++) {
+
+				// ステージ１
+				map0[y][x] = initializeMap0[y][x];
+				// ステージ２
+				map1[y][x] = initializeMap1[y][x];
+				// ステージ３
+				map2[y][x] = initializeMap2[y][x];
+
+				backColor_[y][x] = WHITE;
+			}
+		}
+	}
 }
 
 
@@ -1365,6 +1391,7 @@ void GameManager::Draw(int stageNo)
 					Novice::DrawSprite(x * Size, y * Size, wall, 1, 1, 0, WHITE);
 				}
 
+				// プレイヤー
 				if (map0[y][x] == PLAYER) {
 					Novice::DrawSprite(x * Size, y * Size, player, 2, 2, 0, WHITE);
 				}
@@ -1385,6 +1412,25 @@ void GameManager::Draw(int stageNo)
 					Novice::DrawSprite(x * Size, y * Size, left, 2, 2, 0, WHITE);
 				}
 
+				// プレイヤーの向き
+				if (shotMove_ == 1) // 左向き
+				{
+					Novice::DrawSprite(savePlayerPosX_ - 64, savePlayerPosY_, leftAllow, 1, 1, 0, WHITE);
+				}
+				if (shotMove_ == 2) // 右向き
+				{
+					Novice::DrawSprite(savePlayerPosX_ + 64, savePlayerPosY_, rightAllow, 1, 1, 0, WHITE);
+				}
+				if (shotMove_ == 3) // 上向き
+				{
+					Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ - 64, upAllow, 1, 1, 0, WHITE);
+				}
+				if (shotMove_ == 4) // 下向き
+				{
+					Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ + 64, downAllow, 1, 1, 0, WHITE);
+				}
+
+				// 選択欄
 				Novice::DrawSprite(960, 0, panel, 1, 1, 0, WHITE);
 			}
 
@@ -1392,29 +1438,55 @@ void GameManager::Draw(int stageNo)
 
 				// 背景
 				if (map1[y][x] == BACK) {
-					Novice::DrawSprite(x * Size, y * Size, back, 2, 2, 0, backColor_[y][x]);
+					Novice::DrawSprite(x * Size, y * Size, back, 1, 1, 0, backColor_[y][x]);
 				}
 
 				// 壁
 				if (map1[y][x] == WALL) {
-					Novice::DrawSprite(x * Size, y * Size, wall, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, wall, 1, 1, 0, WHITE);
 				}
 
+				// プレイヤー
 				if (map1[y][x] == PLAYER) {
-					Novice::DrawSprite(x * Size, y * Size, wall, 2, 2, 0, RED);
+					Novice::DrawSprite(x * Size, y * Size, player, 2, 2, 0, WHITE);
 				}
+				// 上
 				if (map1[y][x] == UP) {
-					Novice::DrawSprite(x * Size, y * Size, wall, 2, 2, 0, BLUE);
+					Novice::DrawSprite(x * Size, y * Size, up, 2, 2, 0, WHITE);
 				}
-				if (map1[y][x] == RIGHT) {
-					Novice::DrawSprite(x * Size, y * Size, wall, 2, 2, 0, 0xFF00FFFF);
-				}
-				if (map1[y][x] == LEFT) {
-					Novice::DrawSprite(x * Size, y * Size, wall, 2, 2, 0, 0x00FFFFFF);
-				}
+				// 下
 				if (map1[y][x] == DOWN) {
-					Novice::DrawSprite(x * Size, y * Size, wall, 2, 2, 0, 0xCC00FFFF);
+					Novice::DrawSprite(x * Size, y * Size, down, 2, 2, 0, WHITE);
 				}
+				// 右
+				if (map1[y][x] == RIGHT) {
+					Novice::DrawSprite(x * Size, y * Size, right, 2, 2, 0, WHITE);
+				}
+				// 左
+				if (map1[y][x] == LEFT) {
+					Novice::DrawSprite(x * Size, y * Size, left, 2, 2, 0, WHITE);
+				}
+
+				// プレイヤーの向き
+				if (shotMove_ == 1) // 左向き
+				{
+					Novice::DrawSprite(savePlayerPosX_ - 64, savePlayerPosY_, leftAllow, 1, 1, 0, WHITE);
+				}
+				if (shotMove_ == 2) // 右向き
+				{
+					Novice::DrawSprite(savePlayerPosX_ + 64, savePlayerPosY_, rightAllow, 1, 1, 0, WHITE);
+				}
+				if (shotMove_ == 3) // 上向き
+				{
+					Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ - 64, upAllow, 1, 1, 0, WHITE);
+				}
+				if (shotMove_ == 4) // 下向き
+				{
+					Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ + 64, downAllow, 1, 1, 0, WHITE);
+				}
+
+				// 選択欄
+				Novice::DrawSprite(960, 0, panel, 1, 1, 0, WHITE);
 
 			}
 
@@ -1422,29 +1494,56 @@ void GameManager::Draw(int stageNo)
 
 				// 背景
 				if (map2[y][x] == BACK) {
-					Novice::DrawSprite(x * Size, y * Size, back, 2, 2, 0, backColor_[y][x]);
+					Novice::DrawSprite(x * Size, y * Size, back, 1, 1, 0, backColor_[y][x]);
 				}
 
 				// 壁
 				if (map2[y][x] == WALL) {
-					Novice::DrawSprite(x * Size, y * Size, wall, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, wall, 1, 1, 0, WHITE);
 				}
 
+				// プレイヤー
 				if (map2[y][x] == PLAYER) {
-					Novice::DrawSprite(x * Size, y * Size, wall, 2, 2, 0, RED);
+					Novice::DrawSprite(x * Size, y * Size, player, 2, 2, 0, WHITE);
 				}
+				// 上
 				if (map2[y][x] == UP) {
-					Novice::DrawSprite(x * Size, y * Size, wall, 2, 2, 0, BLUE);
+					Novice::DrawSprite(x * Size, y * Size, up, 2, 2, 0, WHITE);
 				}
-				if (map2[y][x] == RIGHT) {
-					Novice::DrawSprite(x * Size, y * Size, wall, 2, 2, 0, 0xFF00FFFF);
-				}
-				if (map2[y][x] == LEFT) {
-					Novice::DrawSprite(x * Size, y * Size, wall, 2, 2, 0, 0x00FFFFFF);
-				}
+				// 下
 				if (map2[y][x] == DOWN) {
-					Novice::DrawSprite(x * Size, y * Size, wall, 2, 2, 0, 0xCC00FFFF);
+					Novice::DrawSprite(x * Size, y * Size, down, 2, 2, 0, WHITE);
 				}
+				// 右
+				if (map2[y][x] == RIGHT) {
+					Novice::DrawSprite(x * Size, y * Size, right, 2, 2, 0, WHITE);
+				}
+				// 左
+				if (map2[y][x] == LEFT) {
+					Novice::DrawSprite(x * Size, y * Size, left, 2, 2, 0, WHITE);
+				}
+
+				// プレイヤーの向き
+				if (shotMove_ == 1) // 左向き
+				{
+					Novice::DrawSprite(savePlayerPosX_ - 64, savePlayerPosY_, leftAllow, 1, 1, 0, WHITE);
+				}
+				if (shotMove_ == 2) // 右向き
+				{
+					Novice::DrawSprite(savePlayerPosX_ + 64, savePlayerPosY_, rightAllow, 1, 1, 0, WHITE);
+				}
+				if (shotMove_ == 3) // 上向き
+				{
+					Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ - 64, upAllow, 1, 1, 0, WHITE);
+				}
+				if (shotMove_ == 4) // 下向き
+				{
+					Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ + 64, downAllow, 1, 1, 0, WHITE);
+				}
+
+				// 選択欄
+				Novice::DrawSprite(960, 0, panel, 1, 1, 0, WHITE);
+
 			}
 		}
 	}
