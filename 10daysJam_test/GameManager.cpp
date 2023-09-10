@@ -1,4 +1,5 @@
 ﻿#include "GameManager.h"
+#include <stdlib.h>
 
 void GameManager::Initialize()
 {
@@ -49,11 +50,21 @@ void GameManager::Initialize()
 		isWall[i] = 0;
 		clickFlag_ = 0;
 	}
-
+	efectTimer_ = 0;
+	for (int i = 0; i < 8; i++) {
+		efectPosX_[i] = 0;
+		efectPosY_[i] = 0;
+		efectFlag_[i] = 0;
+		saveFlag_ = 0;
+		Timer_[i] = 0;
+		efectAcceleration_[i] = 0.4f;
+		efectVelocity_[i] = 0.0f;
+		randSave[i] = 0;
+	}
 	// テクスチャ
 	back = Novice::LoadTexture("./Resource/images/floor.png");                      //背景
 	wall = Novice::LoadTexture("./Resource/images/metaru.png");                     //壁
-
+	enemyColor = 0xFFFFFFFF;
 }
 void GameManager::Update(int stageNo, char keys[256])
 {
@@ -87,12 +98,174 @@ void GameManager::Update(int stageNo, char keys[256])
 	if (shotPosX_ >= 860 || shotPosX_ <= 0) {
 		shotFlag_ = 0;
 	}
+	if (map0[leftTopY_][leftTopX_] == ENEMY || map0[rightTopY_][rightTopX_] == ENEMY) {
+		judgeFlag_ = 1;
+		deadFlag_ = 1;
+		shotFlag_ = 0;
+		shakeFlag_ = 1;
+	}
+	else {
+		judgeFlag_ = 0;
+	}
 
+	if (map1[leftTopY_][leftTopX_] == ENEMY || map1[rightTopY_][rightTopX_] == ENEMY) {
+		judgeFlag_ = 1;
+		deadFlag_ = 1;
+		shotFlag_ = 0;
+		shakeFlag_ = 1;
+	}
+	else {
+		judgeFlag_ = 0;
+	}
 
+	if (map2[leftTopY_][leftTopX_] == ENEMY || map2[rightTopY_][rightTopX_] == ENEMY) {
+		judgeFlag_ = 1;
+		deadFlag_ = 1;
+		shotFlag_ = 0;
+		shakeFlag_ = 1;
+	}
+	else {
+		judgeFlag_ = 0;
+	}
 
 	// ステージ1
 	if (stageNo == STAGE1)
 	{
+		if (shakeFlag_ == 1) {
+			shakeRandX_ = update_;
+			shakeRandX_ = rand() % shakeRandX_ - 12;
+			shakeRandY_ = update_;
+			shakeRandY_ = rand() % shakeRandY_ - 12;
+			if (saveFlag_ == 25) {
+				a += 1;
+				if (a == 5) {
+					update_ -= 1;
+					a = 0;
+				}
+			}
+			if (update_ <= 0) {
+				shakeFlag_ = 2;
+				update_ = 24;
+			}
+		}
+		if (shakeFlag_ == 2) {
+			enemyColor -= 3;
+			for (int i = 0; i < 8; i++) {
+				if (efectTimer_ >= 50) {
+					if (efectFlag_[i] == 1) {
+
+						if (Timer_[i] <= 3000) {
+							Timer_[i] += 1;
+							efectPosX_[0] += 0.5f;
+							efectPosX_[1] -= 0.5f;
+							efectPosY_[2] += 0.5f;
+							efectPosY_[3] -= 0.5f;
+
+							efectPosX_[4] += 0.5f;
+							efectPosY_[4] += 0.5f;
+							efectPosX_[5] -= 0.5f;
+							efectPosY_[5] -= 0.5f;
+							efectPosX_[6] -= 0.5f;
+							efectPosY_[6] += 0.5f;
+							efectPosX_[7] += 0.5f;
+							efectPosY_[7] -= 0.5f;
+						}
+						if (Timer_[i] >= 3000) {
+							efectFlag_[i] = 0;
+							Timer_[i] = 0;
+
+						}
+					}
+					else {
+						efectFlag_[i] = 1;
+						//efectTimer_ = 0;
+						for (int y = 0; y < mapCountY; y++) {
+							for (int x = 0; x < mapCountX; x++) {
+								if (map0[y][x] == ENEMY) {
+									efectPosX_[i] = (float(x * Size));
+									efectPosY_[i] = (float(y * Size));
+								}
+							}
+						}
+					}
+				}
+			}
+			if (enemyColor <= -255) {
+				enemyColor = -255;
+				shakeFlag_ = 3;
+			}
+		}
+
+		if (shakeFlag_ == 3) {
+			deadFlag_ = 2;
+		}
+
+		//エフェクト
+		for (int i = 0; i < 8; i++) {
+			randSave[0] = rand() % 4 + 1;
+			randSave[1] = rand() % 4 + 1;
+			randSave[2] = rand() % 4 + 1;
+			randSave[3] = rand() % 4 + 1;
+			randSave[4] = rand() % 7 + 5;
+			randSave[5] = rand() % 7 + 5;
+			randSave[6] = rand() % 7 + 5;
+			randSave[7] = rand() % 7 + 5;
+			if (deadFlag_ == 1) {
+				if (efectTimer_ <= 50) {
+					efectTimer_ += 1;
+
+					if (efectTimer_ >= 51) {
+						efectTimer_ -= 1;
+					}
+				}
+				if (efectTimer_ == 50) {
+
+					if (saveFlag_ <= 24) {
+						if (efectFlag_[i] == 1) {
+
+
+							if (Timer_[i] <= 15) {
+								Timer_[i] += 1;
+								efectPosX_[0] += 0.5f;
+								efectPosX_[1] -= 0.5f;
+								efectPosX_[2] += 1.0f;
+								efectPosX_[3] -= 1.0f;
+								efectPosX_[4] += 0.1f;
+								efectPosX_[5] -= 0.1f;
+								efectPosX_[6] += 1.5f;
+								efectPosX_[7] -= 1.5f;
+
+								efectPosY_[i] -= efectVelocity_[i];
+								efectVelocity_[i] -= efectAcceleration_[i];
+							}
+							if (Timer_[i] >= 15) {
+								efectFlag_[i] = 0;
+								Timer_[i] = 0;
+
+							}
+
+
+						}
+						else {
+							efectFlag_[i] = 1;
+							saveFlag_ += 1;
+							efectVelocity_[i] = (float(randSave[i]));
+							efectTimer_ = 0;
+							for (int y = 0; y < mapCountY; y++) {
+								for (int x = 0; x < mapCountX; x++) {
+									if (map0[y][x] == ENEMY) {
+										efectPosX_[i] = (float(x * Size));
+										efectPosY_[i] = (float(y * Size));
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+
 		// プレイヤー操作
 		for (int y = 0; y < mapCountY; y++) {
 			for (int x = 0; x < mapCountX; x++) {
@@ -103,6 +276,17 @@ void GameManager::Update(int stageNo, char keys[256])
 						shotPosY_ = y * Size;
 						savePlayerPosX_ = shotPosX_;
 						savePlayerPosY_ = shotPosY_;
+					}
+				}
+
+				if (judgeFlag_ == 1) {
+					if (map0[y][x] == ENEMY) {
+						for (int i = 0; i < 8; i++) {
+							efectFlag_[i] = 1;
+							efectPosX_[i] = (float(x * Size));
+							efectPosY_[i] = (float(y * Size));
+
+						}
 					}
 				}
 				//壁の判定
@@ -215,7 +399,7 @@ void GameManager::Update(int stageNo, char keys[256])
 
 					if (collisionFlag_ == 1) {
 						if (map0[leftBottomY_][leftBottomX_] == WALL) {
-							if (map0[leftTopY_][leftTopX_] == BACK || map0[leftTopY_][leftTopX_] == PLAYER || map0[rightTopY_][rightTopX_] == PLAYER) {
+							if (map0[leftTopY_][leftTopX_] == BACK || map0[leftTopY_][leftTopX_] == PLAYER) {
 								setShotFlag_ = 1;
 							}
 							if (map0[leftTopY_][leftTopX_] == DOWN) {
@@ -511,6 +695,140 @@ void GameManager::Update(int stageNo, char keys[256])
 	// ステージ2
 	if (stageNo == STAGE2)
 	{
+		//シェイク
+		if (shakeFlag_ == 1) {
+			shakeRandX_ = update_;
+			shakeRandX_ = rand() % shakeRandX_ - 12;
+			shakeRandY_ = update_;
+			shakeRandY_ = rand() % shakeRandY_ - 12;
+			if (saveFlag_ == 25) {
+				a += 1;
+				if (a == 5) {
+					update_ -= 1;
+					a = 0;
+				}
+			}
+			if (update_ <= 0) {
+				shakeFlag_ = 2;
+				update_ = 24;
+			}
+		}
+		if (shakeFlag_ == 2) {
+			enemyColor -= 3;
+			for (int i = 0; i < 8; i++) {
+				if (efectTimer_ >= 50) {
+					if (efectFlag_[i] == 1) {
+
+						if (Timer_[i] <= 3000) {
+							Timer_[i] += 1;
+							efectPosX_[0] += 0.5f;
+							efectPosX_[1] -= 0.5f;
+							efectPosY_[2] += 0.5f;
+							efectPosY_[3] -= 0.5f;
+
+							efectPosX_[4] += 0.5f;
+							efectPosY_[4] += 0.5f;
+							efectPosX_[5] -= 0.5f;
+							efectPosY_[5] -= 0.5f;
+							efectPosX_[6] -= 0.5f;
+							efectPosY_[6] += 0.5f;
+							efectPosX_[7] += 0.5f;
+							efectPosY_[7] -= 0.5f;
+						}
+						if (Timer_[i] >= 3000) {
+							efectFlag_[i] = 0;
+							Timer_[i] = 0;
+
+						}
+					}
+					else {
+						efectFlag_[i] = 1;
+						//efectTimer_ = 0;
+						for (int y = 0; y < mapCountY; y++) {
+							for (int x = 0; x < mapCountX; x++) {
+								if (map1[y][x] == ENEMY) {
+									efectPosX_[i] = (float(x * Size));
+									efectPosY_[i] = (float(y * Size));
+								}
+							}
+						}
+					}
+				}
+			}
+			if (enemyColor <= -255) {
+				enemyColor = -255;
+				shakeFlag_ = 3;
+			}
+		}
+
+		if (shakeFlag_ == 3) {
+			deadFlag_ = 2;
+		}
+
+		//エフェクト
+		for (int i = 0; i < 8; i++) {
+			randSave[0] = rand() % 4 + 1;
+			randSave[1] = rand() % 4 + 1;
+			randSave[2] = rand() % 4 + 1;
+			randSave[3] = rand() % 4 + 1;
+			randSave[4] = rand() % 7 + 5;
+			randSave[5] = rand() % 7 + 5;
+			randSave[6] = rand() % 7 + 5;
+			randSave[7] = rand() % 7 + 5;
+			if (deadFlag_ == 1) {
+				if (efectTimer_ <= 50) {
+					efectTimer_ += 1;
+
+					if (efectTimer_ >= 51) {
+						efectTimer_ -= 1;
+					}
+				}
+				if (efectTimer_ == 50) {
+
+					if (saveFlag_ <= 24) {
+						if (efectFlag_[i] == 1) {
+
+
+							if (Timer_[i] <= 15) {
+								Timer_[i] += 1;
+								efectPosX_[0] += 0.5f;
+								efectPosX_[1] -= 0.5f;
+								efectPosX_[2] += 1.0f;
+								efectPosX_[3] -= 1.0f;
+								efectPosX_[4] += 0.1f;
+								efectPosX_[5] -= 0.1f;
+								efectPosX_[6] += 1.5f;
+								efectPosX_[7] -= 1.5f;
+
+								efectPosY_[i] -= efectVelocity_[i];
+								efectVelocity_[i] -= efectAcceleration_[i];
+							}
+							if (Timer_[i] >= 15) {
+								efectFlag_[i] = 0;
+								Timer_[i] = 0;
+
+							}
+
+
+						}
+						else {
+							efectFlag_[i] = 1;
+							saveFlag_ += 1;
+							efectVelocity_[i] = (float(randSave[i]));
+							efectTimer_ = 0;
+							for (int y = 0; y < mapCountY; y++) {
+								for (int x = 0; x < mapCountX; x++) {
+									if (map1[y][x] == ENEMY) {
+										efectPosX_[i] = (float(x * Size));
+										efectPosY_[i] = (float(y * Size));
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 		// プレイヤー操作
 		for (int y = 0; y < mapCountY; y++) {
 			for (int x = 0; x < mapCountX; x++) {
@@ -926,6 +1244,140 @@ void GameManager::Update(int stageNo, char keys[256])
 	// ステージ3
 	if (stageNo == STAGE3)
 	{
+		if (shakeFlag_ == 1) {
+			shakeRandX_ = update_;
+			shakeRandX_ = rand() % shakeRandX_ - 12;
+			shakeRandY_ = update_;
+			shakeRandY_ = rand() % shakeRandY_ - 12;
+			if (saveFlag_ == 25) {
+				a += 1;
+				if (a == 5) {
+					update_ -= 1;
+					a = 0;
+				}
+			}
+			if (update_ <= 0) {
+				shakeFlag_ = 2;
+				update_ = 24;
+			}
+		}
+		if (shakeFlag_ == 2) {
+			enemyColor -= 3;
+			for (int i = 0; i < 8; i++) {
+				if (efectTimer_ >= 50) {
+					if (efectFlag_[i] == 1) {
+
+						if (Timer_[i] <= 3000) {
+							Timer_[i] += 1;
+							efectPosX_[0] += 0.5f;
+							efectPosX_[1] -= 0.5f;
+							efectPosY_[2] += 0.5f;
+							efectPosY_[3] -= 0.5f;
+
+							efectPosX_[4] += 0.5f;
+							efectPosY_[4] += 0.5f;
+							efectPosX_[5] -= 0.5f;
+							efectPosY_[5] -= 0.5f;
+							efectPosX_[6] -= 0.5f;
+							efectPosY_[6] += 0.5f;
+							efectPosX_[7] += 0.5f;
+							efectPosY_[7] -= 0.5f;
+						}
+						if (Timer_[i] >= 3000) {
+							efectFlag_[i] = 0;
+							Timer_[i] = 0;
+
+						}
+					}
+					else {
+						efectFlag_[i] = 1;
+						//efectTimer_ = 0;
+						for (int y = 0; y < mapCountY; y++) {
+							for (int x = 0; x < mapCountX; x++) {
+								if (map2[y][x] == ENEMY) {
+									efectPosX_[i] = (float(x * Size));
+									efectPosY_[i] = (float(y * Size));
+								}
+							}
+						}
+					}
+				}
+			}
+			if (enemyColor <= -255) {
+				enemyColor = -255;
+				shakeFlag_ = 3;
+			}
+		}
+
+		if (shakeFlag_ == 3) {
+			deadFlag_ = 2;
+		}
+
+		//エフェクト
+		for (int i = 0; i < 8; i++) {
+			randSave[0] = rand() % 4 + 1;
+			randSave[1] = rand() % 4 + 1;
+			randSave[2] = rand() % 4 + 1;
+			randSave[3] = rand() % 4 + 1;
+			randSave[4] = rand() % 7 + 5;
+			randSave[5] = rand() % 7 + 5;
+			randSave[6] = rand() % 7 + 5;
+			randSave[7] = rand() % 7 + 5;
+			if (deadFlag_ == 1) {
+				if (efectTimer_ <= 50) {
+					efectTimer_ += 1;
+
+					if (efectTimer_ >= 51) {
+						efectTimer_ -= 1;
+					}
+				}
+				if (efectTimer_ == 50) {
+
+					if (saveFlag_ <= 24) {
+						if (efectFlag_[i] == 1) {
+
+
+							if (Timer_[i] <= 15) {
+								Timer_[i] += 1;
+								efectPosX_[0] += 0.5f;
+								efectPosX_[1] -= 0.5f;
+								efectPosX_[2] += 1.0f;
+								efectPosX_[3] -= 1.0f;
+								efectPosX_[4] += 0.1f;
+								efectPosX_[5] -= 0.1f;
+								efectPosX_[6] += 1.5f;
+								efectPosX_[7] -= 1.5f;
+
+								efectPosY_[i] -= efectVelocity_[i];
+								efectVelocity_[i] -= efectAcceleration_[i];
+							}
+							if (Timer_[i] >= 15) {
+								efectFlag_[i] = 0;
+								Timer_[i] = 0;
+
+							}
+
+
+						}
+						else {
+							efectFlag_[i] = 1;
+							saveFlag_ += 1;
+							efectVelocity_[i] = (float(randSave[i]));
+							efectTimer_ = 0;
+							for (int y = 0; y < mapCountY; y++) {
+								for (int x = 0; x < mapCountX; x++) {
+									if (map2[y][x] == ENEMY) {
+										efectPosX_[i] = (float(x * Size));
+										efectPosY_[i] = (float(y * Size));
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
 		// プレイヤー操作
 		for (int y = 0; y < mapCountY; y++) {
 			for (int x = 0; x < mapCountX; x++) {
@@ -1430,6 +1882,7 @@ void GameManager::Update(int stageNo, char keys[256])
 				map2[y][x] = initializeMap2[y][x];
 
 				backColor_[y][x] = WHITE;
+				shotFlag_ = 0;
 			}
 		}
 	}
@@ -1440,11 +1893,9 @@ void GameManager::Draw(int stageNo)
 {
 	stageNumber = stageNo;
 
-	for (int y = 0; y < mapCountY; y++) {
-		for (int x = 0; x < mapCountX; x++) {
-
-			if (stageNumber == STAGE1) {
-
+	if (stageNumber == STAGE1) {
+		for (int y = 0; y < mapCountY; y++) {
+			for (int x = 0; x < mapCountX; x++) {
 				// 背景
 				if (map0[y][x] == BACK) {
 					Novice::DrawSprite(x * Size, y * Size, back, 1, 1, 0, backColor_[y][x]);
@@ -1454,7 +1905,19 @@ void GameManager::Draw(int stageNo)
 				if (map0[y][x] == WALL) {
 					Novice::DrawSprite(x * Size, y * Size, wall, 1, 1, 0, WHITE);
 				}
-
+			}
+		}
+		if (shakeFlag_ == 1 || shakeFlag_ == 2) {
+			for (int i = 0; i < 8; i++) {
+				if (efectFlag_[i] == 1) {
+					if (efectTimer_ >= 50) {
+						Novice::DrawSprite((int)efectPosX_[i] + 16, (int)efectPosY_[i] + 16, wall, 0.4f, 0.4f, 0, 0xFF00FFFF);
+					}
+				}
+			}
+		}
+		for (int y = 0; y < mapCountY; y++) {
+			for (int x = 0; x < mapCountX; x++) {
 				// プレイヤー
 				if (map0[y][x] == PLAYER) {
 					Novice::DrawSprite(x * Size, y * Size, player, 2, 2, 0, WHITE);
@@ -1475,31 +1938,40 @@ void GameManager::Draw(int stageNo)
 				if (map0[y][x] == LEFT) {
 					Novice::DrawSprite(x * Size, y * Size, left, 2, 2, 0, WHITE);
 				}
-				if (shotFlag_ == 0) {
-					// プレイヤーの向き
-					if (shotMove_ == 1) // 左向き
-					{
-						Novice::DrawSprite(savePlayerPosX_ - 64, savePlayerPosY_, leftAllow, 1, 1, 0, WHITE);
-					}
-					if (shotMove_ == 2) // 右向き
-					{
-						Novice::DrawSprite(savePlayerPosX_ + 64, savePlayerPosY_, rightAllow, 1, 1, 0, WHITE);
-					}
-					if (shotMove_ == 3) // 上向き
-					{
-						Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ - 64, upAllow, 1, 1, 0, WHITE);
-					}
-					if (shotMove_ == 4) // 下向き
-					{
-						Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ + 64, downAllow, 1, 1, 0, WHITE);
-					}
+
+				// エネミー
+				if (map0[y][x] == ENEMY) {
+					Novice::DrawSprite(x * Size - shakeRandX_, y * Size - shakeRandY_, enemy, 1, 1, 0, enemyColor);
+
 				}
-				// 選択欄
-				Novice::DrawSprite(960, 0, panel, 1, 1, 0, WHITE);
 			}
+		}
+		if (shotFlag_ == 0) {
+			// プレイヤーの向き
+			if (shotMove_ == 1) // 左向き
+			{
+				Novice::DrawSprite(savePlayerPosX_ - 64, savePlayerPosY_, leftAllow, 1, 1, 0, WHITE);
+			}
+			if (shotMove_ == 2) // 右向き
+			{
+				Novice::DrawSprite(savePlayerPosX_ + 64, savePlayerPosY_, rightAllow, 1, 1, 0, WHITE);
+			}
+			if (shotMove_ == 3) // 上向き
+			{
+				Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ - 64, upAllow, 1, 1, 0, WHITE);
+			}
+			if (shotMove_ == 4) // 下向き
+			{
+				Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ + 64, downAllow, 1, 1, 0, WHITE);
+			}
+		}
+		// 選択欄
+		Novice::DrawSprite(960, 0, panel, 1, 1, 0, WHITE);
+	}
 
-			if (stageNumber == STAGE2) {
-
+	if (stageNumber == STAGE2) {
+		for (int y = 0; y < mapCountY; y++) {
+			for (int x = 0; x < mapCountX; x++) {
 				// 背景
 				if (map1[y][x] == BACK) {
 					Novice::DrawSprite(x * Size, y * Size, back, 1, 1, 0, backColor_[y][x]);
@@ -1509,7 +1981,19 @@ void GameManager::Draw(int stageNo)
 				if (map1[y][x] == WALL) {
 					Novice::DrawSprite(x * Size, y * Size, wall, 1, 1, 0, WHITE);
 				}
-
+			}
+		}
+		if (shakeFlag_ == 1 || shakeFlag_ == 2) {
+			for (int i = 0; i < 8; i++) {
+				if (efectFlag_[i] == 1) {
+					if (efectTimer_ >= 50) {
+						Novice::DrawSprite((int)efectPosX_[i] + 16, (int)efectPosY_[i] + 16, wall, 0.4f, 0.4f, 0, 0xFF00FFFF);
+					}
+				}
+			}
+		}
+		for (int y = 0; y < mapCountY; y++) {
+			for (int x = 0; x < mapCountX; x++) {
 				// プレイヤー
 				if (map1[y][x] == PLAYER) {
 					Novice::DrawSprite(x * Size, y * Size, player, 2, 2, 0, WHITE);
@@ -1530,32 +2014,39 @@ void GameManager::Draw(int stageNo)
 				if (map1[y][x] == LEFT) {
 					Novice::DrawSprite(x * Size, y * Size, left, 2, 2, 0, WHITE);
 				}
-				if (shotFlag_ == 0) {
-					// プレイヤーの向き
-					if (shotMove_ == 1) // 左向き
-					{
-						Novice::DrawSprite(savePlayerPosX_ - 64, savePlayerPosY_, leftAllow, 1, 1, 0, WHITE);
-					}
-					if (shotMove_ == 2) // 右向き
-					{
-						Novice::DrawSprite(savePlayerPosX_ + 64, savePlayerPosY_, rightAllow, 1, 1, 0, WHITE);
-					}
-					if (shotMove_ == 3) // 上向き
-					{
-						Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ - 64, upAllow, 1, 1, 0, WHITE);
-					}
-					if (shotMove_ == 4) // 下向き
-					{
-						Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ + 64, downAllow, 1, 1, 0, WHITE);
-					}
+				// エネミー
+				if (map1[y][x] == ENEMY) {
+					Novice::DrawSprite(x * Size - shakeRandX_, y * Size - shakeRandY_, enemy, 1, 1, 0, enemyColor);
 				}
-				// 選択欄
-				Novice::DrawSprite(960, 0, panel, 1, 1, 0, WHITE);
-
 			}
+		}
+		if (shotFlag_ == 0) {
+			// プレイヤーの向き
+			if (shotMove_ == 1) // 左向き
+			{
+				Novice::DrawSprite(savePlayerPosX_ - 64, savePlayerPosY_, leftAllow, 1, 1, 0, WHITE);
+			}
+			if (shotMove_ == 2) // 右向き
+			{
+				Novice::DrawSprite(savePlayerPosX_ + 64, savePlayerPosY_, rightAllow, 1, 1, 0, WHITE);
+			}
+			if (shotMove_ == 3) // 上向き
+			{
+				Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ - 64, upAllow, 1, 1, 0, WHITE);
+			}
+			if (shotMove_ == 4) // 下向き
+			{
+				Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ + 64, downAllow, 1, 1, 0, WHITE);
+			}
+		}
+		// 選択欄
+		Novice::DrawSprite(960, 0, panel, 1, 1, 0, WHITE);
 
-			if (stageNumber == STAGE3) {
+	}
 
+	if (stageNumber == STAGE3) {
+		for (int y = 0; y < mapCountY; y++) {
+			for (int x = 0; x < mapCountX; x++) {
 				// 背景
 				if (map2[y][x] == BACK) {
 					Novice::DrawSprite(x * Size, y * Size, back, 1, 1, 0, backColor_[y][x]);
@@ -1565,7 +2056,19 @@ void GameManager::Draw(int stageNo)
 				if (map2[y][x] == WALL) {
 					Novice::DrawSprite(x * Size, y * Size, wall, 1, 1, 0, WHITE);
 				}
-
+			}
+		}
+		if (shakeFlag_ == 1 || shakeFlag_ == 2) {
+			for (int i = 0; i < 8; i++) {
+				if (efectFlag_[i] == 1) {
+					if (efectTimer_ >= 50) {
+						Novice::DrawSprite((int)efectPosX_[i] + 16, (int)efectPosY_[i] + 16, wall, 0.4f, 0.4f, 0, 0xFF00FFFF);
+					}
+				}
+			}
+		}
+		for (int y = 0; y < mapCountY; y++) {
+			for (int x = 0; x < mapCountX; x++) {
 				// プレイヤー
 				if (map2[y][x] == PLAYER) {
 					Novice::DrawSprite(x * Size, y * Size, player, 2, 2, 0, WHITE);
@@ -1586,40 +2089,53 @@ void GameManager::Draw(int stageNo)
 				if (map2[y][x] == LEFT) {
 					Novice::DrawSprite(x * Size, y * Size, left, 2, 2, 0, WHITE);
 				}
-				if (shotFlag_ == 0) {
-					// プレイヤーの向き
-					if (shotMove_ == 1) // 左向き
-					{
-						Novice::DrawSprite(savePlayerPosX_ - 64, savePlayerPosY_, leftAllow, 1, 1, 0, WHITE);
-					}
-					if (shotMove_ == 2) // 右向き
-					{
-						Novice::DrawSprite(savePlayerPosX_ + 64, savePlayerPosY_, rightAllow, 1, 1, 0, WHITE);
-					}
-					if (shotMove_ == 3) // 上向き
-					{
-						Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ - 64, upAllow, 1, 1, 0, WHITE);
-					}
-					if (shotMove_ == 4) // 下向き
-					{
-						Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ + 64, downAllow, 1, 1, 0, WHITE);
-					}
+				// エネミー
+				if (map2[y][x] == ENEMY) {
+					Novice::DrawSprite(x * Size - shakeRandX_, y * Size - shakeRandY_, enemy, 1, 1, 0, enemyColor);
 				}
-				// 選択欄
-				Novice::DrawSprite(960, 0, panel, 1, 1, 0, WHITE);
-
 			}
 		}
+		if (shotFlag_ == 0) {
+			// プレイヤーの向き
+			if (shotMove_ == 1) // 左向き
+			{
+				Novice::DrawSprite(savePlayerPosX_ - 64, savePlayerPosY_, leftAllow, 1, 1, 0, WHITE);
+			}
+			if (shotMove_ == 2) // 右向き
+			{
+				Novice::DrawSprite(savePlayerPosX_ + 64, savePlayerPosY_, rightAllow, 1, 1, 0, WHITE);
+			}
+			if (shotMove_ == 3) // 上向き
+			{
+				Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ - 64, upAllow, 1, 1, 0, WHITE);
+			}
+			if (shotMove_ == 4) // 下向き
+			{
+				Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ + 64, downAllow, 1, 1, 0, WHITE);
+			}
+		}
+
+		// 選択欄
+		Novice::DrawSprite(960, 0, panel, 1, 1, 0, WHITE);
+
 	}
 
-	Novice::ScreenPrintf(1000, 0, "map[%d][%d]", leftTY, leftTX);
-	Novice::ScreenPrintf(1000, 20, "saveMap[%d][%d]", saveLeftTY, saveLeftTX);
+	//Novice::ScreenPrintf(1000, 0, "map[%d][%d]", leftTY, leftTX);
+	//Novice::ScreenPrintf(1000, 20, "saveMap[%d][%d]", saveLeftTY, saveLeftTX);
 
 	Novice::ScreenPrintf(1000, 40, "laserMove : %d", shotMove_);
 	Novice::ScreenPrintf(1000, 60, "colision : %d", collisionFlag_);
-	Novice::ScreenPrintf(1000, 80, "click : %d", clickFlag_);
+	Novice::ScreenPrintf(1000, 80, "randsave : %d", randSave[1]);
 	Novice::ScreenPrintf(1000, 100, "LEFT,RIGHT,DOWN,UP");
+	Novice::ScreenPrintf(1000, 120, "saveFlag : %d", saveFlag_);
+	Novice::ScreenPrintf(1000, 140, "efectTimer : %d", efectTimer_);
+	Novice::ScreenPrintf(1000, 160, "color : %d", enemyColor);
+	Novice::ScreenPrintf(1000, 260, "update : %d", update_);
 
+	Novice::ScreenPrintf(1000, 220, "efectX : %d", efectPosX_[0]);
+	Novice::ScreenPrintf(1000, 240, "efectY : %f", efectPosY_[0]);
+	Novice::ScreenPrintf(1000, 200, "velo : %f", efectVelocity_[0]);
+	Novice::ScreenPrintf(1000, 180, "acc : %f", efectAcceleration_[0]);
 	for (int i = 0; i < 4; i++) {
 		Novice::DrawBox(selectWX_[i], selectWY_[i], selectWR_[i], selectWR_[i], 0.f, selectWColor_[i], kFillModeSolid);
 	}
@@ -1627,8 +2143,23 @@ void GameManager::Draw(int stageNo)
 	Novice::DrawSprite(selectWX_[1], selectWY_[1], right, 2, 2, 0, selectWColor_[1]);
 	Novice::DrawSprite(selectWX_[2], selectWY_[2], down, 2, 2, 0, selectWColor_[2]);
 	Novice::DrawSprite(selectWX_[3], selectWY_[3], up, 2, 2, 0, selectWColor_[3]);
+	
 	if (shotFlag_ == 1) {
-		Novice::DrawSprite(shotPosX_, shotPosY_, wall, 1.0f, 1.0f, 0.0f, GREEN);
+
+		Novice::DrawSprite(shotPosX_, shotPosY_, Bullet, 1.0f, 1.0f, 0.0f, WHITE);
+
+
+		/*if (shotMove_ == 1 || shotMove_ == 2)
+		{
+			Novice::DrawSprite(shotPosX_, shotPosY_, sideBullet, 1.0f, 1.0f, 0.0f, WHITE);
+		}
+		if (shotMove_ == 3 || shotMove_ == 4)
+		{
+			Novice::DrawSprite(shotPosX_, shotPosY_, verticalBullet, 1.0f, 1.0f, 0.0f, WHITE);
+		}*/
+
 
 	}
+
+
 }

@@ -49,15 +49,15 @@ private:
 	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 7
 	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 8
 	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 9
-	  {2,1,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 10
+	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 10
 	  {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},  // 11
 	};
 
 	int initializeMap0[12][15] = {
 	  {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},  // 0
-	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 1
+	  {2,2,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 1
 	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 2
-	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 3
+	  {2,0,0,0,0,0,0,0,8,0,0,0,0,0,2},  // 3
 	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 4
 	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 5
 	  {2,0,0,0,0,0,0,0,0,0,0,0,0,0,2},  // 6
@@ -85,7 +85,7 @@ private:
 
 	int initializeMap1[12][15] = {
 	  {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},  // 0
-	  {2,0,0,2,0,0,0,0,0,0,0,0,0,0,2},  // 1
+	  {2,8,0,2,0,0,0,0,0,0,0,0,0,0,2},  // 1
 	  {2,0,0,2,0,0,0,0,0,0,0,0,0,0,2},  // 2
 	  {2,0,0,2,0,0,0,0,0,0,0,0,0,0,2},  // 3
 	  {2,0,0,2,0,0,0,0,0,0,0,0,0,0,2},  // 4
@@ -136,7 +136,8 @@ private:
 		RIGHT,    // 4 右
 		LEFT,    // 5 左
 		DOWN,    // 6 下
-		CLEAR
+		CLEAR,
+		ENEMY,
 	};
 
 	// マウス
@@ -179,17 +180,39 @@ private:
 	// フラグ
 	bool isWall[4];
 	int clickFlag_;
+	int judgeFlag_ = 0;
+
+	float efectPosX_[20];
+	float efectPosY_[20];
+	int efectTimer_;
+	int efectFlag_[20];
+	int saveFlag_;
+	int Timer_[20];
+	float efectVelocity_[20];
+	float efectAcceleration_[20];
+	int randSave[20];
+	int shakeRandX_ = 0;
+	int shakeRandY_ = 0;
+	int shakeTimer_ = 0;
+	int shakeFlag_ = 0;
+	int update_ = 24;
+	int enemyColor = 0;
+	int a = 0;
 
 	// フラグ
-
 	int back = 0;
 	int wall = 0;
+	int deadFlag_ = 0;
 
 	int player = Novice::LoadTexture("./Resource/images/player.png");
 	int enemy = Novice::LoadTexture("./Resource/images/enemy.png");
 
 	int vertical = Novice::LoadTexture("./Resource/images/vertical.png");
 	int side = Novice::LoadTexture("./Resource/images/side.png");
+
+	int verticalBullet = Novice::LoadTexture("./Resource/images/verticalBullet.png");
+	int sideBullet = Novice::LoadTexture("./Resource/images/sideBullet.png");
+	int Bullet = Novice::LoadTexture("./Resource/images/Bullet.png");
 
 	int up = Novice::LoadTexture("./Resource/images/up.png");
 	int down = Novice::LoadTexture("./Resource/images/down.png");
@@ -204,3 +227,4 @@ private:
 
 	int panel = Novice::LoadTexture("./Resource/images/panel.png");
 };
+
