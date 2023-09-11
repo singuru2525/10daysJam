@@ -62,7 +62,7 @@ void GameManager::Initialize()
 		randSave[i] = 0;
 	}
 	// テクスチャ
-	back = Novice::LoadTexture("./Resource/images/floor.png");                      //背景
+	back = Novice::LoadTexture("./Resource/images/backTile.png");                      //背景
 	wall = Novice::LoadTexture("./Resource/images/metaru.png");                     //壁
 	enemyColor = 0xFFFFFFFF;
 }
@@ -74,14 +74,15 @@ void GameManager::Update(int stageNo, char keys[256])
 	int leftTopX_ = (shotPosX_) / Size;
 	int leftBottomX_ = (shotPosX_) / Size;
 
-	int rightTopX_ = (shotPosX_ + Size) / Size;
-	int rightBottomX_ = (shotPosX_ + Size) / Size;
+	int rightTopX_ = (shotPosX_ + Size - 1) / Size;
+	int rightBottomX_ = (shotPosX_ + Size - 1) / Size;
 
-	int leftBottomY_ = (shotPosY_ + Size) / Size;
-	int rightBottomY_ = (shotPosY_ + Size) / Size;
+	int leftBottomY_ = (shotPosY_ + Size - 1) / Size;
+	int rightBottomY_ = (shotPosY_ + Size - 1) / Size;
 
 	int rightTopY_ = (shotPosY_) / Size;
 	int leftTopY_ = (shotPosY_) / Size;
+	
 
 	for (int i = 0; i < 4; i++) {
 		// 四隅の判定
@@ -98,39 +99,23 @@ void GameManager::Update(int stageNo, char keys[256])
 	if (shotPosX_ >= 860 || shotPosX_ <= 0) {
 		shotFlag_ = 0;
 	}
-	if (map0[leftTopY_][leftTopX_] == ENEMY || map0[rightTopY_][rightTopX_] == ENEMY) {
-		judgeFlag_ = 1;
-		deadFlag_ = 1;
-		shotFlag_ = 0;
-		shakeFlag_ = 1;
-	}
-	else {
-		judgeFlag_ = 0;
-	}
 
-	if (map1[leftTopY_][leftTopX_] == ENEMY || map1[rightTopY_][rightTopX_] == ENEMY) {
-		judgeFlag_ = 1;
-		deadFlag_ = 1;
-		shotFlag_ = 0;
-		shakeFlag_ = 1;
-	}
-	else {
-		judgeFlag_ = 0;
-	}
-
-	if (map2[leftTopY_][leftTopX_] == ENEMY || map2[rightTopY_][rightTopX_] == ENEMY) {
-		judgeFlag_ = 1;
-		deadFlag_ = 1;
-		shotFlag_ = 0;
-		shakeFlag_ = 1;
-	}
-	else {
-		judgeFlag_ = 0;
-	}
+	
 
 	// ステージ1
 	if (stageNo == STAGE1)
 	{
+
+		if (map0[leftTopY_][leftTopX_] == ENEMY || map0[rightTopY_][rightTopX_] == ENEMY) {
+			judgeFlag_ = 1;
+			deadFlag_ = 1;
+			shotFlag_ = 0;
+			shakeFlag_ = 1;
+		}
+		else {
+			judgeFlag_ = 0;
+		}
+
 		if (shakeFlag_ == 1) {
 			shakeRandX_ = update_;
 			shakeRandX_ = rand() % shakeRandX_ - 12;
@@ -291,14 +276,14 @@ void GameManager::Update(int stageNo, char keys[256])
 				}
 				//壁の判定
 
-				//左
+						//左
 				if (shotMove_ == 1) {
 					if (collisionFlag_ == 1) {
 						if (map0[leftTopY_][leftTopX_] == WALL) {
 							if (map0[rightTopY_][rightTopX_] == BACK || map0[rightTopY_][rightTopX_] == PLAYER) {
 								setShotFlag_ = 1;
 							}
-							if (map0[rightBottomY_][rightBottomX_] == LEFT) {
+							if (map0[rightTopY_][rightTopX_] == LEFT) {
 								setShotFlag_ = 1;
 							}
 						}
@@ -327,19 +312,40 @@ void GameManager::Update(int stageNo, char keys[256])
 
 				//右
 				if (shotMove_ == 2) {
-					if (collisionFlag_ == 1) {
-						if (map0[rightTopY_][rightTopX_] == WALL) {
-							if (map0[leftTopY_][leftTopX_] == BACK || map0[leftTopY_][leftTopX_] == PLAYER) {
-								setShotFlag_ = 1;
-							}
 
+
+					if (map0[rightTopY_][rightTopX_] == WALL) {
+						collisionFlag_ = 1;
+					}
+					else {
+						collisionFlag_ = 0;
+
+					}
+
+					if (collisionFlag_ == 1) {
+
+						if (map0[leftTopY_][leftTopX_] == BACK && map0[leftBottomY_][leftBottomX_] == BACK || map0[leftTopY_][leftTopX_] == PLAYER) {
+							setShotFlag_ = 1;
 						}
-						if (map0[leftTopY_][leftTopX_] == UP || map0[leftTopY_][leftTopX_] == DOWN ||
-							map0[leftTopY_][leftTopX_] == LEFT) {
+						if (map0[leftTopY_][leftTopX_] == RIGHT) {
+							setShotFlag_ = 1;
+						}
+
+						if (map0[rightTopY_][rightTopX_] == WALL && map0[rightBottomY_][rightBottomX_] == WALL &&
+							map0[leftBottomY_][leftBottomX_] == WALL) {
+							setShotFlag_ = 1;
+						}
+
+						if (map0[leftTopY_][leftTopX_] == UP || map0[leftBottomY_][leftBottomX_] == DOWN ||
+							map0[leftBottomY_][leftBottomX_] == LEFT) {
 							setShotFlag_ = 2;
 						}
 					}
 
+					if (map0[rightTopY_][rightTopX_] == BACK && map0[rightBottomY_][rightBottomX_] == BACK &&
+						map0[leftTopY_][leftTopX_] == BACK && map0[leftBottomY_][leftBottomX_] == BACK) {
+						setShotFlag_ = 2;
+					}
 					if (setShotFlag_ == 1) {
 						shotFlag_ = 0;
 						setShotFlag_ = 0;
@@ -348,12 +354,7 @@ void GameManager::Update(int stageNo, char keys[256])
 						setShotFlag_ = 0;
 					}
 
-					if (map0[rightTopY_][rightTopX_] == WALL) {
-						collisionFlag_ = 1;
-					}
-					else {
-						collisionFlag_ = 0;
-					}
+
 
 				}
 
@@ -396,10 +397,9 @@ void GameManager::Update(int stageNo, char keys[256])
 				//下
 				if (shotMove_ == 4) {
 
-
 					if (collisionFlag_ == 1) {
 						if (map0[leftBottomY_][leftBottomX_] == WALL) {
-							if (map0[leftTopY_][leftTopX_] == BACK || map0[leftTopY_][leftTopX_] == PLAYER) {
+							if (map0[leftTopY_][leftTopX_] == BACK || map0[leftTopY_][leftTopX_] == PLAYER || map0[rightTopY_][rightTopX_] == PLAYER) {
 								setShotFlag_ = 1;
 							}
 							if (map0[leftTopY_][leftTopX_] == DOWN) {
@@ -431,12 +431,10 @@ void GameManager::Update(int stageNo, char keys[256])
 
 				}
 
-
 				//スライド
 				if (shotMove_ == 1) {
-					if (map0[leftTopY_][leftTopX_ + 1] == UP) {
+					if (map0[rightBottomY_][rightBottomX_] == UP) {
 						shotMove_ = 3;
-						shotPosX_ = (leftTopX_ + 1) * Size;
 					}
 
 					if (map0[leftTopY_][leftTopX_ + 1] == RIGHT) {
@@ -447,9 +445,8 @@ void GameManager::Update(int stageNo, char keys[256])
 						shotMove_ = 1;
 					}
 
-					if (map0[leftTopY_][leftTopX_ + 1] == DOWN) {
+					if (map0[rightBottomY_][rightBottomX_] == DOWN) {
 						shotMove_ = 4;
-						shotPosX_ = (leftTopX_ + 1) * Size;
 					}
 				}
 
@@ -472,21 +469,19 @@ void GameManager::Update(int stageNo, char keys[256])
 				}
 
 				if (shotMove_ == 3) {
-					if (map0[leftTopY_ + 1][leftTopX_] == UP) {
+					if (map0[leftBottomY_][leftBottomX_] == UP) {
 						shotMove_ = 3;
 					}
 
-					if (map0[leftTopY_ + 1][leftTopX_] == RIGHT) {
+					if (map0[leftBottomY_][leftBottomX_] == RIGHT) {
 						shotMove_ = 2;
-						shotPosY_ = (leftTopY_ + 1) * Size;
 					}
 
-					if (map0[leftTopY_ + 1][leftTopX_] == LEFT) {
+					if (map0[leftBottomY_][leftBottomX_] == LEFT) {
 						shotMove_ = 1;
-						shotPosY_ = (leftTopY_ + 1) * Size;
 					}
 
-					if (map0[leftTopY_ + 1][leftTopX_] == DOWN) {
+					if (map0[leftBottomY_][leftBottomX_] == DOWN) {
 						shotMove_ = 4;
 					}
 				}
@@ -494,26 +489,18 @@ void GameManager::Update(int stageNo, char keys[256])
 				if (shotMove_ == 4) {
 
 					if (map0[leftTopY_][leftTopX_] == UP) {
-
 						shotMove_ = 3;
-
 					}
 
 					if (map0[leftTopY_][leftTopX_] == RIGHT) {
-
 						shotMove_ = 2;
-
 					}
 
 					if (map0[leftTopY_][leftTopX_] == LEFT) {
-
 						shotMove_ = 1;
-
 					}
-					if (map0[leftTopY_ + 1][leftTopX_] == DOWN) {
-
+					if (map0[leftTopY_][leftTopX_] == DOWN) {
 						shotMove_ = 4;
-
 					}
 				}
 
@@ -695,6 +682,18 @@ void GameManager::Update(int stageNo, char keys[256])
 	// ステージ2
 	if (stageNo == STAGE2)
 	{
+
+		if (map1[leftTopY_][leftTopX_] == ENEMY || map1[rightTopY_][rightTopX_] == ENEMY) {
+			judgeFlag_ = 1;
+			deadFlag_ = 1;
+			shotFlag_ = 0;
+			shakeFlag_ = 1;
+		}
+		else {
+			judgeFlag_ = 0;
+		}
+
+
 		//シェイク
 		if (shakeFlag_ == 1) {
 			shakeRandX_ = update_;
@@ -847,10 +846,10 @@ void GameManager::Update(int stageNo, char keys[256])
 				if (shotMove_ == 1) {
 					if (collisionFlag_ == 1) {
 						if (map1[leftTopY_][leftTopX_] == WALL) {
-							if (map1[rightTopY_][rightTopX_] == BACK || map0[rightTopY_][rightTopX_] == PLAYER) {
+							if (map1[rightTopY_][rightTopX_] == BACK || map1[rightTopY_][rightTopX_] == PLAYER) {
 								setShotFlag_ = 1;
 							}
-							if (map1[rightBottomY_][rightBottomX_] == LEFT) {
+							if (map1[rightTopY_][rightTopX_] == LEFT) {
 								setShotFlag_ = 1;
 							}
 						}
@@ -879,19 +878,40 @@ void GameManager::Update(int stageNo, char keys[256])
 
 				//右
 				if (shotMove_ == 2) {
-					if (collisionFlag_ == 1) {
-						if (map1[rightTopY_][rightTopX_] == WALL) {
-							if (map1[leftTopY_][leftTopX_] == BACK || map1[leftTopY_][leftTopX_] == PLAYER) {
-								setShotFlag_ = 1;
-							}
 
+
+					if (map1[rightTopY_][rightTopX_] == WALL) {
+						collisionFlag_ = 1;
+					}
+					else {
+						collisionFlag_ = 0;
+
+					}
+
+					if (collisionFlag_ == 1) {
+
+						if (map1[leftTopY_][leftTopX_] == BACK && map1[leftBottomY_][leftBottomX_] == BACK || map1[leftTopY_][leftTopX_] == PLAYER) {
+							setShotFlag_ = 1;
 						}
-						if (map1[leftTopY_][leftTopX_] == UP || map1[leftTopY_][leftTopX_] == DOWN ||
-							map1[leftTopY_][leftTopX_] == LEFT) {
+						if (map1[leftTopY_][leftTopX_] == RIGHT) {
+							setShotFlag_ = 1;
+						}
+
+						if (map1[rightTopY_][rightTopX_] == WALL && map1[rightBottomY_][rightBottomX_] == WALL &&
+							map1[leftBottomY_][leftBottomX_] == WALL) {
+							setShotFlag_ = 1;
+						}
+
+						if (map1[leftTopY_][leftTopX_] == UP || map1[leftBottomY_][leftBottomX_] == DOWN ||
+							map1[leftBottomY_][leftBottomX_] == LEFT) {
 							setShotFlag_ = 2;
 						}
 					}
 
+					if (map1[rightTopY_][rightTopX_] == BACK && map1[rightBottomY_][rightBottomX_] == BACK &&
+						map1[leftTopY_][leftTopX_] == BACK && map1[leftBottomY_][leftBottomX_] == BACK) {
+						setShotFlag_ = 2;
+					}
 					if (setShotFlag_ == 1) {
 						shotFlag_ = 0;
 						setShotFlag_ = 0;
@@ -900,12 +920,7 @@ void GameManager::Update(int stageNo, char keys[256])
 						setShotFlag_ = 0;
 					}
 
-					if (map1[rightTopY_][rightTopX_] == WALL) {
-						collisionFlag_ = 1;
-					}
-					else {
-						collisionFlag_ = 0;
-					}
+
 
 				}
 
@@ -948,7 +963,6 @@ void GameManager::Update(int stageNo, char keys[256])
 				//下
 				if (shotMove_ == 4) {
 
-
 					if (collisionFlag_ == 1) {
 						if (map1[leftBottomY_][leftBottomX_] == WALL) {
 							if (map1[leftTopY_][leftTopX_] == BACK || map1[leftTopY_][leftTopX_] == PLAYER || map1[rightTopY_][rightTopX_] == PLAYER) {
@@ -983,12 +997,10 @@ void GameManager::Update(int stageNo, char keys[256])
 
 				}
 
-
 				//スライド
 				if (shotMove_ == 1) {
-					if (map1[leftTopY_][leftTopX_ + 1] == UP) {
+					if (map1[rightBottomY_][rightBottomX_] == UP) {
 						shotMove_ = 3;
-						shotPosX_ = (leftTopX_ + 1) * Size;
 					}
 
 					if (map1[leftTopY_][leftTopX_ + 1] == RIGHT) {
@@ -999,9 +1011,8 @@ void GameManager::Update(int stageNo, char keys[256])
 						shotMove_ = 1;
 					}
 
-					if (map1[leftTopY_][leftTopX_ + 1] == DOWN) {
+					if (map1[rightBottomY_][rightBottomX_] == DOWN) {
 						shotMove_ = 4;
-						shotPosX_ = (leftTopX_ + 1) * Size;
 					}
 				}
 
@@ -1024,21 +1035,19 @@ void GameManager::Update(int stageNo, char keys[256])
 				}
 
 				if (shotMove_ == 3) {
-					if (map1[leftTopY_ + 1][leftTopX_] == UP) {
+					if (map1[leftBottomY_][leftBottomX_] == UP) {
 						shotMove_ = 3;
 					}
 
-					if (map1[leftTopY_ + 1][leftTopX_] == RIGHT) {
+					if (map1[leftBottomY_][leftBottomX_] == RIGHT) {
 						shotMove_ = 2;
-						shotPosY_ = (leftTopY_ + 1) * Size;
 					}
 
-					if (map1[leftTopY_ + 1][leftTopX_] == LEFT) {
+					if (map1[leftBottomY_][leftBottomX_] == LEFT) {
 						shotMove_ = 1;
-						shotPosY_ = (leftTopY_ + 1) * Size;
 					}
 
-					if (map1[leftTopY_ + 1][leftTopX_] == DOWN) {
+					if (map1[leftBottomY_][leftBottomX_] == DOWN) {
 						shotMove_ = 4;
 					}
 				}
@@ -1046,26 +1055,18 @@ void GameManager::Update(int stageNo, char keys[256])
 				if (shotMove_ == 4) {
 
 					if (map1[leftTopY_][leftTopX_] == UP) {
-
 						shotMove_ = 3;
-
 					}
 
 					if (map1[leftTopY_][leftTopX_] == RIGHT) {
-
 						shotMove_ = 2;
-
 					}
 
 					if (map1[leftTopY_][leftTopX_] == LEFT) {
-
 						shotMove_ = 1;
-
 					}
-					if (map1[leftTopY_ + 1][leftTopX_] == DOWN) {
-
+					if (map1[leftTopY_][leftTopX_] == DOWN) {
 						shotMove_ = 4;
-
 					}
 				}
 
@@ -1244,6 +1245,17 @@ void GameManager::Update(int stageNo, char keys[256])
 	// ステージ3
 	if (stageNo == STAGE3)
 	{
+		// シェイク
+		if (map2[leftTopY_][leftTopX_] == ENEMY || map2[rightTopY_][rightTopX_] == ENEMY) {
+			judgeFlag_ = 1;
+			deadFlag_ = 1;
+			shotFlag_ = 0;
+			shakeFlag_ = 1;
+		}
+		else {
+			judgeFlag_ = 0;
+		}
+
 		if (shakeFlag_ == 1) {
 			shakeRandX_ = update_;
 			shakeRandX_ = rand() % shakeRandX_ - 12;
@@ -1392,14 +1404,14 @@ void GameManager::Update(int stageNo, char keys[256])
 				}
 				//壁の判定
 
-				//左
+					//左
 				if (shotMove_ == 1) {
 					if (collisionFlag_ == 1) {
 						if (map2[leftTopY_][leftTopX_] == WALL) {
-							if (map2[rightTopY_][rightTopX_] == BACK || map0[rightTopY_][rightTopX_] == PLAYER) {
+							if (map2[rightTopY_][rightTopX_] == BACK || map2[rightTopY_][rightTopX_] == PLAYER) {
 								setShotFlag_ = 1;
 							}
-							if (map2[rightBottomY_][rightBottomX_] == LEFT) {
+							if (map2[rightTopY_][rightTopX_] == LEFT) {
 								setShotFlag_ = 1;
 							}
 						}
@@ -1428,19 +1440,40 @@ void GameManager::Update(int stageNo, char keys[256])
 
 				//右
 				if (shotMove_ == 2) {
-					if (collisionFlag_ == 1) {
-						if (map2[rightTopY_][rightTopX_] == WALL) {
-							if (map2[leftTopY_][leftTopX_] == BACK || map2[leftTopY_][leftTopX_] == PLAYER) {
-								setShotFlag_ = 1;
-							}
 
+
+					if (map2[rightTopY_][rightTopX_] == WALL) {
+						collisionFlag_ = 1;
+					}
+					else {
+						collisionFlag_ = 0;
+
+					}
+
+					if (collisionFlag_ == 1) {
+
+						if (map2[leftTopY_][leftTopX_] == BACK && map2[leftBottomY_][leftBottomX_] == BACK || map2[leftTopY_][leftTopX_] == PLAYER) {
+							setShotFlag_ = 1;
 						}
-						if (map2[leftTopY_][leftTopX_] == UP || map2[leftTopY_][leftTopX_] == DOWN ||
-							map2[leftTopY_][leftTopX_] == LEFT) {
+						if (map2[leftTopY_][leftTopX_] == RIGHT) {
+							setShotFlag_ = 1;
+						}
+
+						if (map2[rightTopY_][rightTopX_] == WALL && map2[rightBottomY_][rightBottomX_] == WALL &&
+							map2[leftBottomY_][leftBottomX_] == WALL) {
+							setShotFlag_ = 1;
+						}
+
+						if (map2[leftTopY_][leftTopX_] == UP || map2[leftBottomY_][leftBottomX_] == DOWN ||
+							map2[leftBottomY_][leftBottomX_] == LEFT) {
 							setShotFlag_ = 2;
 						}
 					}
 
+					if (map2[rightTopY_][rightTopX_] == BACK && map2[rightBottomY_][rightBottomX_] == BACK &&
+						map2[leftTopY_][leftTopX_] == BACK && map2[leftBottomY_][leftBottomX_] == BACK) {
+						setShotFlag_ = 2;
+					}
 					if (setShotFlag_ == 1) {
 						shotFlag_ = 0;
 						setShotFlag_ = 0;
@@ -1449,12 +1482,7 @@ void GameManager::Update(int stageNo, char keys[256])
 						setShotFlag_ = 0;
 					}
 
-					if (map2[rightTopY_][rightTopX_] == WALL) {
-						collisionFlag_ = 1;
-					}
-					else {
-						collisionFlag_ = 0;
-					}
+
 
 				}
 
@@ -1497,7 +1525,6 @@ void GameManager::Update(int stageNo, char keys[256])
 				//下
 				if (shotMove_ == 4) {
 
-
 					if (collisionFlag_ == 1) {
 						if (map2[leftBottomY_][leftBottomX_] == WALL) {
 							if (map2[leftTopY_][leftTopX_] == BACK || map2[leftTopY_][leftTopX_] == PLAYER || map2[rightTopY_][rightTopX_] == PLAYER) {
@@ -1535,9 +1562,8 @@ void GameManager::Update(int stageNo, char keys[256])
 
 				//スライド
 				if (shotMove_ == 1) {
-					if (map2[leftTopY_][leftTopX_ + 1] == UP) {
+					if (map2[rightBottomY_][rightBottomX_] == UP) {
 						shotMove_ = 3;
-						shotPosX_ = (leftTopX_ + 1) * Size;
 					}
 
 					if (map2[leftTopY_][leftTopX_ + 1] == RIGHT) {
@@ -1548,9 +1574,8 @@ void GameManager::Update(int stageNo, char keys[256])
 						shotMove_ = 1;
 					}
 
-					if (map2[leftTopY_][leftTopX_ + 1] == DOWN) {
+					if (map2[rightBottomY_][rightBottomX_] == DOWN) {
 						shotMove_ = 4;
-						shotPosX_ = (leftTopX_ + 1) * Size;
 					}
 				}
 
@@ -1573,21 +1598,19 @@ void GameManager::Update(int stageNo, char keys[256])
 				}
 
 				if (shotMove_ == 3) {
-					if (map2[leftTopY_ + 1][leftTopX_] == UP) {
+					if (map2[leftBottomY_][leftBottomX_] == UP) {
 						shotMove_ = 3;
 					}
 
-					if (map2[leftTopY_ + 1][leftTopX_] == RIGHT) {
+					if (map2[leftBottomY_][leftBottomX_] == RIGHT) {
 						shotMove_ = 2;
-						shotPosY_ = (leftTopY_ + 1) * Size;
 					}
 
-					if (map2[leftTopY_ + 1][leftTopX_] == LEFT) {
+					if (map2[leftBottomY_][leftBottomX_] == LEFT) {
 						shotMove_ = 1;
-						shotPosY_ = (leftTopY_ + 1) * Size;
 					}
 
-					if (map2[leftTopY_ + 1][leftTopX_] == DOWN) {
+					if (map2[leftBottomY_][leftBottomX_] == DOWN) {
 						shotMove_ = 4;
 					}
 				}
@@ -1595,26 +1618,18 @@ void GameManager::Update(int stageNo, char keys[256])
 				if (shotMove_ == 4) {
 
 					if (map2[leftTopY_][leftTopX_] == UP) {
-
 						shotMove_ = 3;
-
 					}
 
 					if (map2[leftTopY_][leftTopX_] == RIGHT) {
-
 						shotMove_ = 2;
-
 					}
 
 					if (map2[leftTopY_][leftTopX_] == LEFT) {
-
 						shotMove_ = 1;
-
 					}
-					if (map2[leftTopY_ + 1][leftTopX_] == DOWN) {
-
+					if (map2[leftTopY_][leftTopX_] == DOWN) {
 						shotMove_ = 4;
-
 					}
 				}
 
@@ -1893,6 +1908,10 @@ void GameManager::Draw(int stageNo)
 {
 	stageNumber = stageNo;
 
+	Novice::DrawSprite(0, 0, BG, 1, 1, 0, WHITE);
+	// 選択欄
+	Novice::DrawSprite(960, 0, panel, 1, 1, 0, WHITE);
+
 	if (stageNumber == STAGE1) {
 		for (int y = 0; y < mapCountY; y++) {
 			for (int x = 0; x < mapCountX; x++) {
@@ -1965,11 +1984,10 @@ void GameManager::Draw(int stageNo)
 				Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ + 64, downAllow, 1, 1, 0, WHITE);
 			}
 		}
-		// 選択欄
-		Novice::DrawSprite(960, 0, panel, 1, 1, 0, WHITE);
 	}
 
 	if (stageNumber == STAGE2) {
+
 		for (int y = 0; y < mapCountY; y++) {
 			for (int x = 0; x < mapCountX; x++) {
 				// 背景
@@ -2039,8 +2057,7 @@ void GameManager::Draw(int stageNo)
 				Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ + 64, downAllow, 1, 1, 0, WHITE);
 			}
 		}
-		// 選択欄
-		Novice::DrawSprite(960, 0, panel, 1, 1, 0, WHITE);
+		
 
 	}
 
@@ -2114,9 +2131,6 @@ void GameManager::Draw(int stageNo)
 				Novice::DrawSprite(savePlayerPosX_, savePlayerPosY_ + 64, downAllow, 1, 1, 0, WHITE);
 			}
 		}
-
-		// 選択欄
-		Novice::DrawSprite(960, 0, panel, 1, 1, 0, WHITE);
 
 	}
 

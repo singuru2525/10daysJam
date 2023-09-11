@@ -80,6 +80,8 @@ void StageSelect::Update()
 
 void StageSelect::Draw()
 {
+	Novice::DrawSprite(0, 0, BG, 1, 1, 0, WHITE);
+
 	// ステージ１
 	Novice::DrawSprite(selectST1X_, selectST1Y_, stage1_, 1.f, 1.f, 0.0f, selectST1Color_);
 	// ステージ２

@@ -56,6 +56,8 @@ private:
 	// フラグ
 	bool isGameStart_ = 0;
 
+	int BG = Novice::LoadTexture("./Resource/images/BG.png");
+
 	// テクスチャ
 	int stage1_ = 0;
 	int stage2_ = 0;
