@@ -2,6 +2,7 @@
 #include "GameManager.h"
 #include "Title.h"
 #include "StageSelect.h"
+#include "GameClear.h"
 #include <Novice.h>
 
 #pragma once
@@ -27,8 +28,8 @@ private:
 		TitleScene,
 		StageSelectScene,
 		Game,
-		GameClear,
-		GameOver
+		GameClearScene,
+		GameOverScene
 	};
 
 	int sceneNo_ = 0;
@@ -41,4 +42,7 @@ private:
 
 	// ステージセレクト管理
 	StageSelect* stageSelect_ = nullptr;
+
+	// ゲームクリア画面
+	GameClear* gameClear_ = nullptr;
 };

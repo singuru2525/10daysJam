@@ -1,4 +1,5 @@
 ﻿#include <Novice.h>
+#include "GameClear.h"
 
 #pragma once
 class StageSelect
@@ -14,6 +15,11 @@ public:
 	int GetStageNo() { return stageNo_; }
 
 	bool IsGameStart() { return isGameStart_; }
+
+	GameClear* GetGameClear()
+	{
+		return gameClear_;
+	}
 
 private:
 
@@ -56,9 +62,9 @@ private:
 	// フラグ
 	bool isGameStart_ = 0;
 
+	// テクスチャ
 	int BG_ = 0;
 
-	// テクスチャ
 	int stage1_ = 0;
 	int stage2_ = 0;
 	int stage3_ = 0;
@@ -68,4 +74,6 @@ private:
 	int selectStage2_ = 0;
 	int selectStage3_ = 0;
 	int selectTutorial_ = 0;
+
+	GameClear* gameClear_ = nullptr;
 };

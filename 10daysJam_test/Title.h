@@ -1,4 +1,5 @@
 ﻿#include <Novice.h>
+#include "GameClear.h"
 
 #pragma once
 class Title
@@ -10,7 +11,14 @@ public:
 
 	void Draw();
 
+	void Animetion();
+
 	bool GetIsStart() { return isStart_; }
+
+	GameClear* GetGameClear()
+	{
+		return gameClear_;
+	}
 
 private:
 
@@ -26,10 +34,19 @@ private:
 	int mousePosY_ = 0;
 
 	// テクスチャ
-	int title_ = 0;
+	int titleLogo_ = 0;
+	int titleBack_ = 0;
 	int start_ = 0;
+
+	// タイトルアニメーション
+
+	int titleScrX_ = 0;
+	int titleScrW_ = 899;
+	int scrLimitX_ = 14384;
+	int animetionTimer = 0;
 
 	// フラグ
 	bool isStart_ = 0;
 
+	GameClear* gameClear_ = nullptr;
 };

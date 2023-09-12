@@ -150,7 +150,7 @@ public:
 		return flagOut_;
 	}
 
-	bool GetGameOver()
+	bool GetGameClear()
 	{
 		return isGameClear_;
 	}
@@ -158,6 +158,11 @@ public:
 	bool IsSceneChange()
 	{
 		return isSceneChange_;
+	}
+
+	bool IsOpen()
+	{
+		return isOpen_;
 	}
 
 	int GetRad()
@@ -174,6 +179,12 @@ public:
 	{
 		this->flagOut_ = flag;
 	}
+
+	void SetOpen(bool flag)
+	{
+		this->isOpen_ = flag;
+	}
+
 	void SetGameOver(bool isGameOver)
 	{
 		this->isGameClear_ = isGameOver;
