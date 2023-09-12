@@ -1939,23 +1939,23 @@ void GameManager::Draw(int stageNo)
 			for (int x = 0; x < mapCountX; x++) {
 				// プレイヤー
 				if (map0[y][x] == PLAYER) {
-					Novice::DrawSprite(x * Size, y * Size, player, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, player, 1, 1, 0, WHITE);
 				}
 				// 上
 				if (map0[y][x] == UP) {
-					Novice::DrawSprite(x * Size, y * Size, up, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, up, 1, 1, 0, WHITE);
 				}
 				// 下
 				if (map0[y][x] == DOWN) {
-					Novice::DrawSprite(x * Size, y * Size, down, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, down, 1, 1, 0, WHITE);
 				}
 				// 右
 				if (map0[y][x] == RIGHT) {
-					Novice::DrawSprite(x * Size, y * Size, right, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, right, 1, 1, 0, WHITE);
 				}
 				// 左
 				if (map0[y][x] == LEFT) {
-					Novice::DrawSprite(x * Size, y * Size, left, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, left, 1, 1, 0, WHITE);
 				}
 
 				// エネミー
@@ -2014,23 +2014,23 @@ void GameManager::Draw(int stageNo)
 			for (int x = 0; x < mapCountX; x++) {
 				// プレイヤー
 				if (map1[y][x] == PLAYER) {
-					Novice::DrawSprite(x * Size, y * Size, player, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, player, 1, 1, 0, WHITE);
 				}
 				// 上
 				if (map1[y][x] == UP) {
-					Novice::DrawSprite(x * Size, y * Size, up, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, up, 1, 1, 0, WHITE);
 				}
 				// 下
 				if (map1[y][x] == DOWN) {
-					Novice::DrawSprite(x * Size, y * Size, down, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, down, 1, 1, 0, WHITE);
 				}
 				// 右
 				if (map1[y][x] == RIGHT) {
-					Novice::DrawSprite(x * Size, y * Size, right, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, right, 1, 1, 0, WHITE);
 				}
 				// 左
 				if (map1[y][x] == LEFT) {
-					Novice::DrawSprite(x * Size, y * Size, left, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, left, 1, 1, 0, WHITE);
 				}
 				// エネミー
 				if (map1[y][x] == ENEMY) {
@@ -2088,23 +2088,23 @@ void GameManager::Draw(int stageNo)
 			for (int x = 0; x < mapCountX; x++) {
 				// プレイヤー
 				if (map2[y][x] == PLAYER) {
-					Novice::DrawSprite(x * Size, y * Size, player, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, player, 1, 1, 0, WHITE);
 				}
 				// 上
 				if (map2[y][x] == UP) {
-					Novice::DrawSprite(x * Size, y * Size, up, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, up, 1, 1, 0, WHITE);
 				}
 				// 下
 				if (map2[y][x] == DOWN) {
-					Novice::DrawSprite(x * Size, y * Size, down, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, down, 1, 1, 0, WHITE);
 				}
 				// 右
 				if (map2[y][x] == RIGHT) {
-					Novice::DrawSprite(x * Size, y * Size, right, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, right, 1, 1, 0, WHITE);
 				}
 				// 左
 				if (map2[y][x] == LEFT) {
-					Novice::DrawSprite(x * Size, y * Size, left, 2, 2, 0, WHITE);
+					Novice::DrawSprite(x * Size, y * Size, left, 1, 1, 0, WHITE);
 				}
 				// エネミー
 				if (map2[y][x] == ENEMY) {
@@ -2150,13 +2150,12 @@ void GameManager::Draw(int stageNo)
 	Novice::ScreenPrintf(1000, 240, "efectY : %f", efectPosY_[0]);
 	Novice::ScreenPrintf(1000, 200, "velo : %f", efectVelocity_[0]);
 	Novice::ScreenPrintf(1000, 180, "acc : %f", efectAcceleration_[0]);
-	for (int i = 0; i < 4; i++) {
-		Novice::DrawBox(selectWX_[i], selectWY_[i], selectWR_[i], selectWR_[i], 0.f, selectWColor_[i], kFillModeSolid);
-	}
-	Novice::DrawSprite(selectWX_[0], selectWY_[0], left, 2, 2, 0, selectWColor_[0]);
-	Novice::DrawSprite(selectWX_[1], selectWY_[1], right, 2, 2, 0, selectWColor_[1]);
-	Novice::DrawSprite(selectWX_[2], selectWY_[2], down, 2, 2, 0, selectWColor_[2]);
-	Novice::DrawSprite(selectWX_[3], selectWY_[3], up, 2, 2, 0, selectWColor_[3]);
+	
+
+	Novice::DrawSprite(selectWX_[0], selectWY_[0], left, 1, 1, 0, selectWColor_[0]);
+	Novice::DrawSprite(selectWX_[1], selectWY_[1], right, 1, 1, 0, selectWColor_[1]);
+	Novice::DrawSprite(selectWX_[2], selectWY_[2], down, 1, 1, 0, selectWColor_[2]);
+	Novice::DrawSprite(selectWX_[3], selectWY_[3], up, 1, 1, 0, selectWColor_[3]);
 	
 	if (shotFlag_ == 1) {
 

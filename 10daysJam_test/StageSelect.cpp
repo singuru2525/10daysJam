@@ -6,10 +6,16 @@ void StageSelect::Initialize()
 	isGameStart_ = false;
 
 	// テクスチャロード
+	BG_ = Novice::LoadTexture("./Resource/images/BG.png");
 	stage1_ = Novice::LoadTexture("./Resource/images/stage1.png");
 	stage2_ = Novice::LoadTexture("./Resource/images/stage2.png");
 	stage3_ = Novice::LoadTexture("./Resource/images/stage3.png");
 	tutorial_ = Novice::LoadTexture("./Resource/images/tutorial.png");
+
+	selectStage1_ = Novice::LoadTexture("./Resource/images/selectStage1.png");
+	selectStage2_ = Novice::LoadTexture("./Resource/images/selectStage2.png");
+	selectStage3_ = Novice::LoadTexture("./Resource/images/selectStage3.png");
+	selectTutorial_ = Novice::LoadTexture("./Resource/images/selectTutorial.png");
 }
 
 void StageSelect::Update()
@@ -20,6 +26,7 @@ void StageSelect::Update()
 	if (mousePosX_ >= selectST1X_ && mousePosX_ <= selectST1X_ + selectW_ && mousePosY_ >= selectST1Y_ && mousePosY_ <= selectST1Y_ + selectH_)
 	{
 		selectST1Color_ = RED;
+
 		if (selectST1Color_ = RED && Novice::IsPressMouse(0))
 		{
 			stageNo_ = 1;
@@ -80,14 +87,45 @@ void StageSelect::Update()
 
 void StageSelect::Draw()
 {
-	Novice::DrawSprite(0, 0, BG, 1, 1, 0, WHITE);
+	Novice::DrawSprite(0, 0, BG_, 1, 1, 0, WHITE);
 
-	// ステージ１
-	Novice::DrawSprite(selectST1X_, selectST1Y_, stage1_, 1.f, 1.f, 0.0f, selectST1Color_);
-	// ステージ２
-	Novice::DrawSprite(selectST2X_, selectST2Y_, stage2_, 1.f, 1.f, 0.0f, selectST2Color_);
-	// ステージ３
-	Novice::DrawSprite(selectST3X_, selectST3Y_, stage3_, 1.f, 1.f, 0.0f, selectST3Color_);
-	// チュートリアル
-	Novice::DrawSprite(selectTutorialX_, selectTutorialY_, tutorial_, 1.f, 1.f, 0.0f, selectTutorialColor_);
+	// ステージ１を選択する処理
+	if (mousePosX_ >= selectST1X_ && mousePosX_ <= selectST1X_ + selectW_ && mousePosY_ >= selectST1Y_ && mousePosY_ <= selectST1Y_ + selectH_)
+	{
+		Novice::DrawSprite(selectST1X_, selectST1Y_, selectStage1_, 1.f, 1.f, 0.0f, WHITE);
+	}
+	else
+	{
+		Novice::DrawSprite(selectST1X_, selectST1Y_, stage1_, 1.f, 1.f, 0.0f, WHITE);
+	}
+
+	// ステージ２を選択する処理
+	if (mousePosX_ >= selectST2X_ && mousePosX_ <= selectST2X_ + selectW_ && mousePosY_ >= selectST2Y_ && mousePosY_ <= selectST2Y_ + selectH_)
+	{
+		Novice::DrawSprite(selectST2X_, selectST2Y_, selectStage2_, 1.f, 1.f, 0.0f, WHITE);
+	}
+	else
+	{
+		Novice::DrawSprite(selectST2X_, selectST2Y_, stage2_, 1.f, 1.f, 0.0f, WHITE);
+	}
+
+	// ステージ３を選択する処理
+	if (mousePosX_ >= selectST3X_ && mousePosX_ <= selectST3X_ + selectW_ && mousePosY_ >= selectST3Y_ && mousePosY_ <= selectST3Y_ + selectH_)
+	{
+		Novice::DrawSprite(selectST3X_, selectST3Y_, selectStage3_, 1.f, 1.f, 0.0f, WHITE);
+	}
+	else
+	{
+		Novice::DrawSprite(selectST3X_, selectST3Y_, stage3_, 1.f, 1.f, 0.0f, WHITE);
+	}
+	
+	// チュートリアルを選択する処理
+	if (mousePosX_ >= selectTutorialX_ && mousePosX_ <= selectTutorialX_ + selectTW_ && mousePosY_ >= selectTutorialY_ && mousePosY_ <= selectTutorialY_ + selectTH_)
+	{
+		Novice::DrawSprite(selectTutorialX_, selectTutorialY_, selectTutorial_, 1.f, 1.f, 0.0f, WHITE);
+	}
+	else
+	{
+		Novice::DrawSprite(selectTutorialX_, selectTutorialY_, tutorial_, 1.f, 1.f, 0.0f, WHITE);
+	}
 }
